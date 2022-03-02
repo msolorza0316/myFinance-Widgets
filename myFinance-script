@@ -1,0 +1,19 @@
+<script async type='text/javascript' id="myFinance-widget-script">
+!function () {function e() {var s = "myFinance-widget-ad-script";if (!document.getElementById(s)) {var e = document.createElement("script"), n = document.getElementById("myFinance-widget-script"), a = t + "widget/myFinance.js";e.id = s, e.type = "text/javascript", e.async = !0, e.src = a, n.parentNode.insertBefore(e, n);}var c = "myFinance-widget-css";if (!document.getElementById(c)) {var d = document.getElementsByTagName("head")[0], i = document.createElement("link");i.id = c, i.rel = "stylesheet", i.type = "text/css", i.href = t + "widget/myFinance.css", i.media = "all", d.appendChild(i)}}var t = "https://static.myfinance.com/";document.attachEvent ? document.attachEvent("onreadystatechange", function () {"complete" === document.readyState && e()}) : document.addEventListener("DOMContentLoaded", e, !1)}();
+</script>
+
+
+
+{% set idNum = widgetid %}
+{% set campaignName = campaign %}
+
+<div id="testo" class="myFinance-widget" data-campaign="{{ campaignName }}"  data-widget-id="{{ idNum }}"></div>
+
+<script>
+var segments = window.location.href.split('/');
+URL = segments.pop();
+document.getElementsByClassName("myFinance-widget")[0].setAttribute("data-sub-id",URL);
+var toReplace = document.getElementById("testo");
+toReplace.replace("myFinance-ad-unit", "myFinance");
+
+</script>
