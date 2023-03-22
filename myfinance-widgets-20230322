@@ -1,0 +1,92 @@
+<style>
+#myfinance-widget-loader {
+  border: 10px solid #c7c7c7;
+  border-top: 10px solid #0371e1;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1.25s linear infinite;
+  margin: 1em auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+</style>
+
+{% if campaign == "finder-he-multi" or campaign == "finder-heloc-multi-cashout" or campaign == "finder-he-cashoutrefi-multi" %}
+   {% set productID = "9d38c004-c3ab-4fb4-a3aa-b4a7263b66d7" %}
+  {% elseif campaign == "finder-mtgpurch-multi" %}
+   {% set productID = "94f1977b-a380-4737-bb30-9ae83a5af7b3" %}
+  {% elseif campaign == "finder-mtgrefi-multi" %}
+   {% set productID = "d4cbf10b-a59c-43c0-9b97-02b02f11ca70" %}
+{% endif %}
+   
+{% set nicheID = "USFHL" %}
+
+<link id="inlineMedia-css" rel="stylesheet" type="text/css" href="https://static.myfinance.com/widget/inlineMedia.css" media="all">
+
+<div id="myFinanceWidgetCalc">
+<div id="myfinance-widget-loader"></div>
+<div id="myfinance-widget-loader-text" style="margin: 0 auto; text-align: center;">Loading rates...</div>
+
+[fin_hide]
+<script id="inlineMedia-script" type="text/javascript" async="" src="https://static.myfinance.com/widget/inlineMedia_staticOnly.js" defer></script>  
+[/fin_hide]
+
+
+{% set idNum = widgetid %}
+{% set campaignName = campaign %}
+
+{% if campaign == "finder-he-multi" or campaign == "finder-heloc-multi-cashout"%}
+<div class="myFinance-widget" data-campaign="{{ campaignName }}"  data-ad-id="{{ idNum }}"></div>
+{% else %}
+<div class="myFinance-widget" data-campaign="{{ campaignName }}"  data-widget-id="{{ idNum }}"></div>
+{% endif %}
+
+</div>
+
+{% if productID != "" %}
+{% set urlframe =  do_shortcode_twig('[nb:value niche_code="' ~ nicheID ~ '" record_type="PRODUCT" record_id="' ~ productID ~ '" field="LINKS.REDIRECT_SLUG" decorator="GLOBAL.VALUE.REDIRECT_SLUG"]') %}
+<div style="visibility: hidden; width:1" ><iframe id="myFrame" height="1" width="1" title="test iframe" data-src="/redirect/us/mortgages/{{ urlframe }}.html?nb=1"></iframe></div>
+{% endif %}
+
+<script>
+var segmentParam;
+var urlp = new URLSearchParams(document.location.search);
+var rsub = urlp.get("rvsub_id");
+
+if (rsub == null || rsub == "") {
+
+  function grabFrameData() {
+    console.log('Grabbing data');
+    var iframe = document.getElementById("myFrame");
+
+    var elmnt = iframe.contentWindow.document.location.search;
+    segmentParam = elmnt.split('?rvsub_id=').pop();
+
+    if (segmentParam == "" || segmentParam == "?nb=1") {
+        console.log("Not loaded yet");
+        document.getElementsByClassName("myFinance-widget")[0].setAttribute("data-sub-id", segmentParam);
+        setTimeout(grabFrameData, 300)
+    } else {
+        console.log('done: ' + segmentParam);
+
+        document.getElementById("myfinance-widget-loader").style.display = "none";
+        document.getElementById("myfinance-widget-loader-text").style.display = "none";
+
+        document.getElementsByClassName("myFinance-widget")[0].setAttribute("data-sub-id", segmentParam);
+
+        let myScript = document.createElement("script");
+myScript.setAttribute("src", "https://static.myfinance.com/widget/inlineMedia_staticOnly.js");
+myScript.setAttribute("type", "text/javascript")
+document.body.appendChild(myScript);
+
+    }
+
+  }
+ 
+  grabFrameData()
+}
+</script>
